@@ -1,5 +1,5 @@
 {
-    "name": "100yuristov/StoYuristovClient",
+    "name": "100yuristov/sto-yuristov-client",
     "description": "API client for 100yuristov.com service",
     "require": {
         "php": "^5.3 || ^7.0"
