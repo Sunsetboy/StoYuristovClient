@@ -10,8 +10,6 @@ class StoYuristovClient {
     protected $_secretKey; // секретный ключ кампании
     protected $_curlLink; // линк Curl
     protected $_signature; // подпись запроса
-    protected $_apiUrlTest = 'http://100juristov/api/sendLead/';
-    protected $_apiUrl = 'https://100yuristov.com/api/sendLead/';
     protected $_testMode; // 0|1 Включение / выключение тестового режима
     // параметры лида
     public $name;
@@ -19,6 +17,7 @@ class StoYuristovClient {
     public $question;
     public $town;
     public $email;
+    public $price;
 
     /**
      * Конструктор
@@ -26,11 +25,12 @@ class StoYuristovClient {
      * @param integer $appId
      * @param string $secretKey
      */
-    public function __construct($appId, $secretKey, $testMode = 0) 
+    public function __construct($appId, $secretKey, $testMode = 0, $apiUrl = 'https://100yuristov.com/api/sendLead/')
     {
         $this->_appId = $appId;
         $this->_secretKey = $secretKey;
         $this->_testMode = $testMode;
+        $this->_apiUrl = $apiUrl;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->_apiUrl);
@@ -91,6 +91,7 @@ class StoYuristovClient {
             'email' => $this->email,
             'town' => $this->town,
             'question' => $this->question,
+            'price' => $this->price,
             'appId' => $this->_appId,
             'signature' => $this->_signature,
             'testMode' => $this->_testMode,
