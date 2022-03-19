@@ -2,7 +2,7 @@
     "name": "100yuristov/sto-yuristov-client",
     "description": "API client for 100yuristov.com service",
     "require": {
-        "php": "^5.3 || ^7.0",
+        "php": "^5.3 || ^7.0 || ^8.0",
         "ext-curl": "*",
         "ext-json": "*"
     }

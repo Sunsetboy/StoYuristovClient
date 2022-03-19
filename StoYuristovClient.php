@@ -2,7 +2,7 @@
 
 /**
  * Клиент для работы с API сервиса 100 Юристов
- * @author Михаил Крутиков <m@mkrutikov.pro>
+ * @author Michael Krutikov <misha.sunsetboy@gmail.com>
  */
 class StoYuristovClient {
 
