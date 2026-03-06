@@ -3,12 +3,35 @@
     "description": "API client for 100yuristov.com service",
     "require": {
         "php": "^8.1",
-        "ext-curl": "*",
-        "ext-json": "*"
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "php-http/mock-client": "^1.0",
+        "php-http/discovery": "^1.0",
+        "nyholm/psr7": "^1.8"
+    },
+    "suggest": {
+        "php-http/httplug": "Plugin system for retries, logging, caching",
+        "php-http/retry-plugin": "Retry failed requests automatically",
+        "php-http/discovery": "Auto-discover installed PSR-18 clients",
+        "guzzlehttp/guzzle": "Popular PSR-18 compatible HTTP client",
+        "symfony/http-client": "Symfony PSR-18 HTTP client"
     },
     "autoload": {
         "psr-4": {
             "StoYuristov\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StoYuristov\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }
