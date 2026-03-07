@@ -8,3 +8,4 @@ docker-build:
 
 docker-test: docker-build
 	docker run --rm sto-yuristov-client
+
