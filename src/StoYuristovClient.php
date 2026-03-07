@@ -82,13 +82,13 @@ class StoYuristovClient
 
     private function calculateSignature(StoYuristovLead $lead): string
     {
-        $message =
+        return md5(
             $lead->getName() .
             $lead->getPhone() .
             $lead->getTown() .
             $lead->getQuestion() .
-            $this->appId;
-
-        return hash_hmac('sha256', $message, $this->secretKey);
+            $this->appId .
+            $this->secretKey
+        );
     }
 }
