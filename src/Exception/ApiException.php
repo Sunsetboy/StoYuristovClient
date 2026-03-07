@@ -7,9 +7,9 @@ use RuntimeException;
 
 class ApiException extends RuntimeException
 {
-    public function __construct(string $message, private readonly int $httpStatusCode = 0)
+    public function __construct(string $message, private readonly int $httpStatusCode = 0, ?\Throwable $previous = null)
     {
-        parent::__construct($message);
+        parent::__construct($message, 0, $previous);
     }
 
     public function getHttpStatusCode(): int

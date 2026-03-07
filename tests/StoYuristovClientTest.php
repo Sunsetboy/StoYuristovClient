@@ -164,6 +164,30 @@ class StoYuristovClientTest extends TestCase
         $this->sdk->sendLead($this->validLead());
     }
 
+    public function test_sendLead_throws_ApiException_on_empty_response_body(): void
+    {
+        $this->httpClient->addResponse(new Response(200, body: ''));
+
+        $this->expectException(ApiException::class);
+        $this->sdk->sendLead($this->validLead());
+    }
+
+    public function test_sendLead_throws_ApiException_on_non_json_response_body(): void
+    {
+        $this->httpClient->addResponse(new Response(200, body: 'Internal Server Error'));
+
+        $this->expectException(ApiException::class);
+        $this->sdk->sendLead($this->validLead());
+    }
+
+    public function test_sendLead_throws_ApiException_on_truncated_json_response_body(): void
+    {
+        $this->httpClient->addResponse(new Response(200, body: '{"code": 0, "mess'));
+
+        $this->expectException(ApiException::class);
+        $this->sdk->sendLead($this->validLead());
+    }
+
     public function test_ApiException_exposes_http_status_code(): void
     {
         $this->httpClient->addResponse(new Response(

@@ -67,7 +67,11 @@ class StoYuristovClient
 
         $response = $this->httpClient->sendRequest($request);
 
-        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new ApiException('Invalid JSON response from API', $response->getStatusCode(), $e);
+        }
 
         if ($response->getStatusCode() >= 400 || ($data['code'] ?? 0) !== 0) {
             throw new ApiException($data['message'] ?? 'API error', $response->getStatusCode());

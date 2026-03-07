@@ -31,7 +31,6 @@ use GuzzleHttp\Psr7\HttpFactory;
 use StoYuristov\StoYuristovClient;
 use StoYuristov\StoYuristovLead;
 
-$guzzle  = new GuzzleClient(['timeout' => 5]);
 $adapter = GuzzleAdapter::createWithConfig(['timeout' => 5]);
 $factory = new HttpFactory();
 
