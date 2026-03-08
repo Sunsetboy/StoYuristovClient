@@ -9,6 +9,7 @@ class LeadResponse
         public readonly int $code,
         public readonly string $message,
         public readonly ?int $leadId = null,
+        public readonly ?int $buyPrice = null,
     ) {
     }
 
@@ -18,6 +19,7 @@ class LeadResponse
             code: (int) ($data['code'] ?? 0),
             message: (string) ($data['message'] ?? ''),
             leadId: isset($data['leadId']) ? (int) $data['leadId'] : null,
+            buyPrice: isset($data['buyPrice']) ? (int) $data['buyPrice'] : null,
         );
     }
 }
