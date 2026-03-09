@@ -68,7 +68,7 @@ class StoYuristovClientTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        $lead = new StoYuristovLead('', '+79001234567', 'a@b.com', 'Москва',
+        $lead = new StoYuristovLead('', '+79001234567', 'Москва',
             StoYuristovLead::TYPE_QUESTION, 'Вопрос');
 
         $this->sdk->sendLead($lead);
@@ -78,7 +78,7 @@ class StoYuristovClientTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        $lead = new StoYuristovLead('Иван', '', 'a@b.com', 'Москва',
+        $lead = new StoYuristovLead('Иван', '', 'Москва',
             StoYuristovLead::TYPE_QUESTION, 'Вопрос');
 
         $this->sdk->sendLead($lead);
@@ -88,7 +88,7 @@ class StoYuristovClientTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        $lead = new StoYuristovLead('Иван', '+79001234567', 'a@b.com', 'Москва',
+        $lead = new StoYuristovLead('Иван', '+79001234567', 'Москва',
             StoYuristovLead::TYPE_QUESTION, '');
 
         $this->sdk->sendLead($lead);
@@ -98,7 +98,7 @@ class StoYuristovClientTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        $lead = new StoYuristovLead('Иван', '+79001234567', 'a@b.com', '',
+        $lead = new StoYuristovLead('Иван', '+79001234567', '',
             StoYuristovLead::TYPE_QUESTION, 'Вопрос');
 
         $this->sdk->sendLead($lead);
@@ -106,7 +106,7 @@ class StoYuristovClientTest extends TestCase
 
     public function test_ValidationException_contains_all_error_messages(): void
     {
-        $lead = new StoYuristovLead('', '', 'a@b.com', '',
+        $lead = new StoYuristovLead('', '', '',
             StoYuristovLead::TYPE_QUESTION, '');
 
         try {
@@ -124,7 +124,7 @@ class StoYuristovClientTest extends TestCase
 
     public function test_ValidationException_does_not_send_http_request(): void
     {
-        $lead = new StoYuristovLead('', '', '', '', StoYuristovLead::TYPE_QUESTION, '');
+        $lead = new StoYuristovLead('', '', '', StoYuristovLead::TYPE_QUESTION, '');
 
         try {
             $this->sdk->sendLead($lead);
@@ -155,8 +155,8 @@ class StoYuristovClientTest extends TestCase
     public function test_sendLead_throws_ApiException_when_api_returns_error_code(): void
     {
         $this->httpClient->addResponse(new Response(
-            status: 200,
-            body: json_encode(['code' => 1, 'message' => 'Invalid signature']),
+            status: 400,
+            body: json_encode(['message' => 'Invalid signature']),
         ));
 
         $this->expectException(ApiException::class);
@@ -243,10 +243,10 @@ class StoYuristovClientTest extends TestCase
         $lead = new StoYuristovLead(
             name: 'Иван',
             phone: '+79001234567',
-            email: 'ivan@example.com',
             town: 'Москва',
             type: StoYuristovLead::TYPE_QUESTION,
             question: 'Как расторгнуть договор?',
+            email: 'ivan@example.com',
         );
         $this->sdk->sendLead($lead);
 
@@ -264,8 +264,8 @@ class StoYuristovClientTest extends TestCase
     {
         $this->queueSuccessResponse();
 
-        $lead = new StoYuristovLead('Иван', '+79001234567', 'a@b.com', 'Москва',
-            StoYuristovLead::TYPE_QUESTION, 'Вопрос', price: 35);
+        $lead = new StoYuristovLead('Иван', '+79001234567', 'Москва',
+            StoYuristovLead::TYPE_QUESTION, 'Вопрос', email: 'a@b.com', price: 35);
         $this->sdk->sendLead($lead);
 
         parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
@@ -287,8 +287,8 @@ class StoYuristovClientTest extends TestCase
     {
         $this->queueSuccessResponse();
 
-        $lead = new StoYuristovLead('Иван', '+79001234567', 'a@b.com', 'Москва',
-            StoYuristovLead::TYPE_QUESTION, 'Вопрос', widgetUuid: 'abc-123');
+        $lead = new StoYuristovLead('Иван', '+79001234567', 'Москва',
+            StoYuristovLead::TYPE_QUESTION, 'Вопрос', email: 'a@b.com', widgetUuid: 'abc-123');
         $this->sdk->sendLead($lead);
 
         parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
@@ -303,7 +303,7 @@ class StoYuristovClientTest extends TestCase
 
         $uri = (string) $this->httpClient->getLastRequest()->getUri();
 
-        $this->assertStringEndsWith('sendLead/', $uri);
+        $this->assertStringEndsWith('lead/create/', $uri);
     }
 
     public function test_sendLead_uses_correct_content_type(): void
@@ -321,14 +321,14 @@ class StoYuristovClientTest extends TestCase
     public function test_signature_changes_when_lead_data_changes(): void
     {
         $this->queueSuccessResponse();
-        $this->sdk->sendLead(new StoYuristovLead('Иван', '+79001234567', 'a@b.com', 'Москва',
-            StoYuristovLead::TYPE_QUESTION, 'Вопрос один'));
+        $this->sdk->sendLead(new StoYuristovLead('Иван', '+79001234567', 'Москва',
+            StoYuristovLead::TYPE_QUESTION, 'Вопрос один', email: 'a@b.com'));
 
         parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body1);
 
         $this->queueSuccessResponse();
-        $this->sdk->sendLead(new StoYuristovLead('Пётр', '+79009876543', 'b@c.com', 'Казань',
-            StoYuristovLead::TYPE_QUESTION, 'Вопрос два'));
+        $this->sdk->sendLead(new StoYuristovLead('Пётр', '+79009876543', 'Казань',
+            StoYuristovLead::TYPE_QUESTION, 'Вопрос два', email: 'b@c.com'));
 
         parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body2);
 
