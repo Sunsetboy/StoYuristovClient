@@ -58,7 +58,7 @@ class StoYuristovClient
             $params['widgetUuid'] = $lead->getWidgetUuid();
         }
 
-        $body = http_build_query($params);
+        $body = json_encode($params);
 
         $request = $this->requestFactory
             ->createRequest('POST', $this->baseUrl . '/lead/create/')
