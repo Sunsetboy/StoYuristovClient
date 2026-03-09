@@ -61,7 +61,7 @@ class StoYuristovClient
         $body = http_build_query($params);
 
         $request = $this->requestFactory
-            ->createRequest('POST', $this->baseUrl . 'sendLead/')
+            ->createRequest('POST', $this->baseUrl . '/lead/create/')
             ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
             ->withBody($this->streamFactory->createStream($body));
 
@@ -73,7 +73,7 @@ class StoYuristovClient
             throw new ApiException('Invalid JSON response from API', $response->getStatusCode(), $e);
         }
 
-        if ($response->getStatusCode() >= 400 || ($data['code'] ?? 0) !== 0) {
+        if ($response->getStatusCode() >= 400) {
             throw new ApiException($data['message'] ?? 'API error', $response->getStatusCode());
         }
 

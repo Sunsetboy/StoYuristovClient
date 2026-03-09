@@ -11,10 +11,10 @@ class StoYuristovLead
     public function __construct(
         private readonly string $name,
         private readonly string $phone,
-        private readonly string $email,
         private readonly string $town,
         private readonly int $type,
         private readonly string $question,
+        private readonly ?string $email = null,
         private readonly ?int $price = null,
         private readonly ?string $widgetUuid = null,
     ) {
@@ -45,7 +45,7 @@ class StoYuristovLead
 
     public function getName(): string { return $this->name; }
     public function getPhone(): string { return $this->phone; }
-    public function getEmail(): string { return $this->email; }
+    public function getEmail(): ?string { return $this->email; }
     public function getTown(): string { return $this->town; }
     public function getType(): int { return $this->type; }
     public function getQuestion(): string { return $this->question; }
