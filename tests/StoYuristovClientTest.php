@@ -210,9 +210,9 @@ class StoYuristovClientTest extends TestCase
         $this->queueSuccessResponse();
         $this->sdk->sendLead($this->validLead());
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
-        $this->assertSame('42', $body['appId']);
+        $this->assertSame(42, $body['appId']);
     }
 
     public function test_sendLead_sends_testMode_0_by_default(): void
@@ -220,9 +220,9 @@ class StoYuristovClientTest extends TestCase
         $this->queueSuccessResponse();
         $this->sdk->sendLead($this->validLead());
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
-        $this->assertSame('0', $body['testMode']);
+        $this->assertSame(0, $body['testMode']);
     }
 
     public function test_sendLead_includes_signature_in_body(): void
@@ -230,7 +230,7 @@ class StoYuristovClientTest extends TestCase
         $this->queueSuccessResponse();
         $this->sdk->sendLead($this->validLead());
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
         $this->assertArrayHasKey('signature', $body);
         $this->assertNotEmpty($body['signature']);
@@ -250,14 +250,14 @@ class StoYuristovClientTest extends TestCase
         );
         $this->sdk->sendLead($lead);
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
         $this->assertSame('Иван', $body['name']);
         $this->assertSame('+79001234567', $body['phone']);
         $this->assertSame('ivan@example.com', $body['email']);
         $this->assertSame('Москва', $body['town']);
         $this->assertSame('Как расторгнуть договор?', $body['question']);
-        $this->assertSame((string) StoYuristovLead::TYPE_QUESTION, $body['type']);
+        $this->assertSame(StoYuristovLead::TYPE_QUESTION, $body['type']);
     }
 
     public function test_sendLead_sends_price_when_set(): void
@@ -268,9 +268,9 @@ class StoYuristovClientTest extends TestCase
             StoYuristovLead::TYPE_QUESTION, 'Вопрос', email: 'a@b.com', price: 35);
         $this->sdk->sendLead($lead);
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
-        $this->assertSame('35', $body['price']);
+        $this->assertSame(35, $body['price']);
     }
 
     public function test_sendLead_omits_price_when_not_set(): void
@@ -278,7 +278,7 @@ class StoYuristovClientTest extends TestCase
         $this->queueSuccessResponse();
         $this->sdk->sendLead($this->validLead());
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
         $this->assertArrayNotHasKey('price', $body);
     }
@@ -291,7 +291,7 @@ class StoYuristovClientTest extends TestCase
             StoYuristovLead::TYPE_QUESTION, 'Вопрос', email: 'a@b.com', widgetUuid: 'abc-123');
         $this->sdk->sendLead($lead);
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
         $this->assertSame('abc-123', $body['widgetUuid']);
     }
@@ -313,7 +313,7 @@ class StoYuristovClientTest extends TestCase
 
         $contentType = $this->httpClient->getLastRequest()->getHeaderLine('Content-Type');
 
-        $this->assertSame('application/x-www-form-urlencoded', $contentType);
+        $this->assertSame('application/json', $contentType);
     }
 
     // --- Signature ---
@@ -324,13 +324,13 @@ class StoYuristovClientTest extends TestCase
         $this->sdk->sendLead(new StoYuristovLead('Иван', '+79001234567', 'Москва',
             StoYuristovLead::TYPE_QUESTION, 'Вопрос один', email: 'a@b.com'));
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body1);
+        $body1 = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
         $this->queueSuccessResponse();
         $this->sdk->sendLead(new StoYuristovLead('Пётр', '+79009876543', 'Казань',
             StoYuristovLead::TYPE_QUESTION, 'Вопрос два', email: 'b@c.com'));
 
-        parse_str((string) $this->httpClient->getLastRequest()->getBody(), $body2);
+        $body2 = json_decode((string) $this->httpClient->getLastRequest()->getBody(), true);
 
         $this->assertNotSame($body1['signature'], $body2['signature']);
     }
@@ -345,9 +345,9 @@ class StoYuristovClientTest extends TestCase
         $sdk = new StoYuristovClient(42, 'secret', $mockClient, $this->factory, $this->factory, testMode: true);
         $sdk->sendLead($this->validLead());
 
-        parse_str((string) $mockClient->getLastRequest()->getBody(), $body);
+        $body = json_decode((string) $mockClient->getLastRequest()->getBody(), true);
 
-        $this->assertSame('1', $body['testMode']);
+        $this->assertSame(1, $body['testMode']);
     }
 
     // --- Helpers ---

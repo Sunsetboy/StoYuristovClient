@@ -62,7 +62,7 @@ class StoYuristovClient
 
         $request = $this->requestFactory
             ->createRequest('POST', $this->baseUrl . '/lead/create/')
-            ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+            ->withHeader('Content-Type', 'application/json')
             ->withBody($this->streamFactory->createStream($body));
 
         $response = $this->httpClient->sendRequest($request);
