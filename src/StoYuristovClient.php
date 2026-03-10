@@ -15,6 +15,8 @@ use StoYuristov\Exception\ValidationException;
  */
 class StoYuristovClient
 {
+    const SIGNATURE_ALGORITHM = 'sha256';
+
     public function __construct(
         private readonly int $appId,
         private readonly string $secretKey,
@@ -82,12 +84,8 @@ class StoYuristovClient
 
     private function calculateSignature(StoYuristovLead $lead): string
     {
-        return md5(
-            $lead->getName() .
-            $lead->getPhone() .
-            $lead->getTown() .
-            $lead->getQuestion() .
-            $this->appId .
+        return hash_hmac(self::SIGNATURE_ALGORITHM,
+            $lead->getName() . $lead->getPhone() . $lead->getTown() . $lead->getQuestion() . $this->appId,
             $this->secretKey
         );
     }
