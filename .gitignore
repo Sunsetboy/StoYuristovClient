@@ -1,1 +1,6 @@
 .idea/
+.phpunit.result.cache
+vendor
+composer.phar
+composer-setup.php
+
