@@ -23,7 +23,7 @@ class StoYuristovClient
         private readonly ClientInterface $httpClient,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly StreamFactoryInterface $streamFactory,
-        private readonly string $baseUrl = 'https://100yuristov.com/api/',
+        private readonly string $baseUrl = 'https://100yuristov.com/api2/',
         private readonly bool $testMode = false,
     ) {
     }
@@ -63,7 +63,7 @@ class StoYuristovClient
         $body = json_encode($params);
 
         $request = $this->requestFactory
-            ->createRequest('POST', $this->baseUrl . '/lead/create/')
+            ->createRequest('POST', rtrim($this->baseUrl, '/') . '/lead/create/')
             ->withHeader('Content-Type', 'application/json')
             ->withBody($this->streamFactory->createStream($body));
 
